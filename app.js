@@ -15,7 +15,8 @@ app.get("/pdf", async (req, res) => {
     const url = await req.query.url;
 
     const browser = await puppeteer.launch({
-        headless: true
+        headless: true,
+        executablePath:'/usr/bin/google-chrome'
     });
 
     const webPage = await browser.newPage();
@@ -23,16 +24,11 @@ app.get("/pdf", async (req, res) => {
     await webPage.goto(url, {
         waitUntil: "networkidle0"
     });
+//await webPage.waitForSelector('.slide__background-wrapper')
     
     const pdf = await webPage.pdf({
         printBackground: true,
-        format: "A4",
-        margin: {
-            top: "0px",
-            bottom: "0px",
-            left: "0px",
-            right: "0px"
-        }
+        format:'A4'
     });
 
     await browser.close();
